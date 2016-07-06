@@ -11,3 +11,10 @@ Make script executable:
 To run:
 
     sudo ./run.py
+
+
+To run on startup, edit `/etc/rc.local` and add:
+
+    (sleep 10;/path/to/script/./run.py)&
+
+

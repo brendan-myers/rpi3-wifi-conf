@@ -3,6 +3,7 @@
 import os
 from bluetooth import *
 import subprocess
+import time
 
 try:
 	while True:
@@ -77,13 +78,17 @@ try:
 
 
 		# restart wifi adapter
-		cmd = 'sudo ifconfig wlan0 down'
+		cmd = 'sudo ifdown wlan0'
 		cmd_result = os.system(cmd)
 		print cmd + " - " + str(cmd_result)
 
-		cmd = 'sudo ifconfig wlan0 up'
+		time.sleep(2)
+
+		cmd = 'sudo ifup wlan0'
 		cmd_result = os.system(cmd)
 		print cmd + " - " + str(cmd_result)
+
+		time.sleep(10)
 
 		cmd = 'iwconfig wlan0'
 		cmd_result = os.system(cmd)
