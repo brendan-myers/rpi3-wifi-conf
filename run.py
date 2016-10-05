@@ -5,6 +5,10 @@ from bluetooth import *
 import subprocess
 import time
 
+wpa_supplicant_conf = "/etc/wpa_supplicant/wpa_supplicant.conf"
+sudo_mode = "sudo "
+
+
 def wifi_connect(ssid, psk):
     # write wifi config to file
     f = open('wifi.conf', 'w')
@@ -18,20 +22,20 @@ def wifi_connect(ssid, psk):
     f.write('}\n')
     f.close()
 
-    cmd = 'mv wifi.conf /etc/wpa_supplicant/wpa_supplicant.conf'
+    cmd = 'mv wifi.conf ' + wpa_supplicant_conf
     cmd_result = ""
     cmd_result = os.system(cmd)
     print cmd + " - " + str(cmd_result)
 
 
     # restart wifi adapter
-    cmd = 'sudo ifdown wlan0'
+    cmd = sudo_mode + 'ifdown wlan0'
     cmd_result = os.system(cmd)
     print cmd + " - " + str(cmd_result)
 
     time.sleep(2)
 
-    cmd = 'sudo ifup wlan0'
+    cmd = sudo_mode + 'ifup wlan0'
     cmd_result = os.system(cmd)
     print cmd + " - " + str(cmd_result)
 
