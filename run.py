@@ -59,6 +59,42 @@ def wifi_connect(ssid, psk):
     return ip_address
 
 
+def handle_client(client_sock) :
+    # get ssid
+    client_sock.send("waiting-ssid!")
+    print "Waiting for SSID..."
+
+
+    ssid = client_sock.recv(1024)
+    if ssid == '' :
+        return
+
+    print "ssid received"
+    print ssid
+
+    # get psk
+    client_sock.send("waiting-psk!")
+    print "Waiting for PSK..."
+
+
+    psk = client_sock.recv(1024)
+    if psk == '' :
+        return
+
+    print "psk received"
+
+    print psk
+
+    ip_address = wifi_connect(ssid, psk)
+
+    print "ip address: " + ip_address
+
+    client_sock.send("ip-addres:" + ip_address + "!")
+
+    return
+
+
+
 try:
     while True:
         server_sock=BluetoothSocket( RFCOMM )
@@ -80,43 +116,8 @@ try:
         client_sock, client_info = server_sock.accept()
         print "Accepted connection from ", client_info
 
+        handle_client(client_sock)
 
-        ssid = ""
-        psk = ""
-
-
-        # get ssid
-        client_sock.send("waiting-ssid!")
-        print "Waiting for SSID..."
-
-        while True:
-            data = client_sock.recv(1024)
-            ssid = data
-            print "ssid received"
-
-            break
-
-        print ssid
-
-
-        # get psk
-        client_sock.send("waiting-psk!")
-        print "Waiting for PSK..."
-
-        while True:
-            data = client_sock.recv(1024)
-            psk = data
-            print "psk received"
-
-            break
-
-        print psk
-
-        ip_address=wifi_connect(ssid, psk)
-
-        print "ip address: " + ip_address
-
-        client_sock.send("ip-addres:" + ip_address + "!")
         client_sock.close()
         server_sock.close()
 
