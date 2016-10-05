@@ -2,8 +2,12 @@
 
 import os
 from bluetooth import *
+from wifi import Cell, Scheme
 import subprocess
 import time
+
+
+
 
 wpa_supplicant_conf = "/etc/wpa_supplicant/wpa_supplicant.conf"
 sudo_mode = "sudo "
@@ -63,9 +67,25 @@ def wifi_connect(ssid, psk):
     return ip_address
 
 
+
+def ssid_discovered():
+    Cells = Cell.all('wlan0')
+
+    wifi_info = 'Found ssid : \n'
+
+    for current in range(len(Cells)):
+        wifi_info +=  Cells[current].ssid + "\n"
+
+
+    wifi_info+="!"
+
+    print wifi_info
+    return wifi_info
+
+
 def handle_client(client_sock) :
     # get ssid
-    client_sock.send("waiting-ssid!")
+    client_sock.send(ssid_discovered())
     print "Waiting for SSID..."
 
 
